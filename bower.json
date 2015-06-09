@@ -1,0 +1,22 @@
+{
+  "name": "project-5-app",
+  "version": "0.0.0",
+  "authors": [
+    "Kacy McKibben <kacy.mckibben@gmail.com>"
+  ],
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "knockout": "~3.3.0"
+  }
+}
