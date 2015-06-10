@@ -3,39 +3,43 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Kacy's Project 5</title>
-		<style type="text/css">html, body, #map-canvas { height: 100%; margin: 0; padding: 0;}
+		<meta name="viewport" content="width=device-width">
+		<style type="text/css">
+		  html { height: 100% }
+		  body { height: 100%; margin: 0; padding: 0 }
+		  #map-canvas { width: 75%; height: 75%; float: right;}
+		  .list { float: left;}
 		</style>
-		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDu4jIGqO52nAL52Hlf-MNu5fgX9NZn0T4"
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDu4jIGqO52nAL52Hlf-MNu5fgX9NZn0T4" type="text/javascript">
+		</script>
 		<script src="knockout-3.3.0.js"></script>
+		<script src="jquery-1.11.3.min.js"></script>
+		<script src="app.js"></script>
 	</head>
 	<body>
-		<label>Search:</label>
-		<input type="text" data-bind="value:location, valueUpdate:'keyup'">
-		<p>Value:<span data-bind="text:location"></span></p>
-		<ul data-bind="foreach:locations">
-			<li>
-				<span data-bind="text:name"></span>
-			</li>
-		</ul>
+		<div class='header'>
+			<label>Search:</label>
+			<input type="text" placeholder='Filter places...' data-bind="value:currentLocation().names, valueUpdate:'keyup'">
+		</div>
+		<div class='list'>
+			<h3>Key Locations</h3>
+			<!--<ul data-bind="foreach: currentLocations">
+				<li data-bind="click: show_marker"><span data-bind="text: title"></span>
+				</li>
+			</ul>-->
+			<ul style="list-style-type:none">
+				<li>Walt Disney Hall</li>
+				<li>Dodger Stadium</li>
+				<li>Metro Plaza Hotel</li>
+				<li>The LA Hotel Downtown</li>
+				<li>Historic Mayfair Hotel</li>
+				<li>Philippe The Original</li>
+				<li>Noe Restaurant and Bar</li>
+				<li>La Parrilla</li>
+				<li>Yard House</li>
+				<li>Palm Restaurant</li>
+			</ul>
+		</div>
 		<div id="map-canvas"></div>
-		<script>
-			function initialize() {
-				var mapOptions = {
-					center: {lat: -34.397, lng: 150.644},
-					zoom: 8
-				};
-				var map = new google.maps.Map(document.getElementByID('map-canvas'), mapOptions);
-			}
-			google.maps.event.addDomListener(window,'load',initialize);
-			/*function Location(name){
-				this.name=name;
-			}
-			var loc={
-				location:ko.observable('Coffee shop'),
-				locations:ko.observableArray([new Location('restaurant'), new Location('hotel')])
-			};
-			ko.applyBindings(loc);*/
-		</script>
-		<script src="js/script.js"></script>
 	</body>
 </html>
