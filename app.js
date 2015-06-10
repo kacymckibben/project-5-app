@@ -20,34 +20,91 @@ var Location = function(data) {
 		this.marker.setMap(map);
 	};
 }*/
+function Model() {
+	this.generateLists = function(articles) {
+		var Info_Content = '<ol>\n';
+
+		for (var i = 0; i < articles.length; i++){
+			var content = articles[i].content;
+			var url = articles[i].url;
+
+			Info_Content += '<li><a href="' + url + '">' + content + '</a></li>\n';
+		}
+		Info_Content += '<ol>';
+		return Info_Content;
+	};
+}
+var model = new Model();
+
 var ViewModel = function() {
-	/*var nytUrl = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=' + this.title + '&sort=newest&api-key=57a19b2e7a7d77a1f0c942e487e7e70e:11:72202220';
-    $.getJSON(nytUrl, function(data){ // data is what is returned
+	var self = this;
+	self.articleList = ko.observableArray();
 
-        $nytHeaderElem.text('New York Times Articles About ' + this.title);
-        articles = data.response.docs; // look at preview tab > response > docs > articles returned
-        for (var i = 0; i < articles.length; i++){
-            var article = articles[i];
-            $nytElem.append('<li class="article">' + '<a href="' + article.web_url + '">' + article.headline.main + '</a>' + '<p>' + article.snippet + '</p>' + '</li>');
-        }; // web_url and snippet are properties of each article returned
-
-    }).error(function(e){
-        $nytHeaderElem.text('New York Times articles could not be loaded.');
-    });*/
-	/*var self = this;
-	this.locationList = ko.observableArray([]);
-
-	initialLocations.forEach(function(locationItem){
-		self.locationList.push( new Location(locationItem) );
+	self.article = function (content, url) {
+		this.content = content;
+		this.url = url;
+	};
+	var map = new google.maps.Map(document.getElementById('map-canvas'), {
+		center: new google.maps.LatLng(34.0432121, -118.2499534),
+		zoom: 12,
 	});
-	this.currentLocation = ko.observable( this.locationList()[0]);*/
 
-	/*self.show_marker = function(location){
-		google.maps.event.trigger(location.marker,'click', function(){
-			infowindow.open(map, marker);
+	var infowindow = new google.maps.InfoWindow();
+
+
+
+	self.mapPin = function(name, lat, lon, text) {
+		this.name = ko.observable(name);
+		this.lat = ko.observable(lat);
+		this.lon = ko.observable(lon);
+		this.text = ko.observable(text);
+
+		var marker = new google.maps.Marker({
+			position: new google.maps.LatLng(lat, lon),
+			map: map,
+			animation: google.maps.Animation.DROP,
 		});
-	}*/
-	function initialize() {
+
+		function toggleBounce() {
+			if(marker.getAnimation() != null) {
+				marker.setAnimation(null);
+			} else {
+				marker.setAnimation(google.maps.Animation.BOUNCE);
+			}
+		}
+
+		google.maps.event.addListener(marker, 'click', function(){
+			self.apiData(name);
+
+			toggleBounce();
+			setTimeout(toggleBounce, 2000);
+			window.setTimeout(function(){
+				infowindow.setContent(model.generateLists(self.articleList()));
+				infowindow.open(map, marker);
+			}, 300);
+		});
+	};
+
+	self.pins = ko.observableArray([
+		new self.mapPin("The LA Hotel Downtown", 34.05497, -118.255428, "test"),
+		new self.mapPin("Yard House", 34.044984, -118.265775, "test"),
+		new self.mapPin("Walt Disney Concert Hall", 34.055345, -118.249845, "test"),
+		new self.mapPin("Dodger Stadium", 34.072736, -118.240616, "test")
+	]);
+
+	self.apiData = function(name,lat,lon) {
+		var foursquareUrl = 'http://api.foursquare.com/v2/venues/search?ll=' + lat + ',' + lon + '&query=' + name + '&client_id=AOICOBBHGVYWPCIOEKTNF5CECB3RNMJWJWIQHEHJ1ZWDSAH1&client_secret=5HO3PIPDPY1DS50SLOUFNIAU1ZO2YBPPSWJQDCFGCBKE3HND';
+		var failText = 'Failed to get FOURSQUARE resources';
+
+		$.getJSON(nytUrl, function(data){
+			articles = data.venues;
+			self.articleList.removeAll();
+			var name = articles[0].name;
+			var url = articles[0].url;
+			self.articleList.push(new self.article(name, url));
+		});
+	}
+	/*function initialize() {
 		var mapOptions = {
 			center: {lat: 34.0432121, lng: -118.2499534},
 			zoom: 12
@@ -87,7 +144,8 @@ var ViewModel = function() {
 			setTimeout(toggleBounce, 2000);
 		});
 	}
-	google.maps.event.addDomListener(window,'load',initialize);
-}
-ViewModel();
-/*ko.applyBindings(new ViewModel());*/
+	google.maps.event.addDomListener(window,'load',initialize);*/
+};
+$(document).ready(function() {
+	ko.applyBindings(new ViewModel());
+});
