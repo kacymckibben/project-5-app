@@ -7,8 +7,8 @@
 		<style type="text/css">
 		  html { height: 100% }
 		  body { height: 100%; margin: 0; padding: 0 }
-		  #map-canvas { width: 75%; height: 75%; float: right;}
-		  .list { float: left;}
+		  #map-canvas { width: 75%; height: 75%; float: right; position: relative;}
+		  .list { float: left; position: relative;}
 		</style>
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDu4jIGqO52nAL52Hlf-MNu5fgX9NZn0T4" type="text/javascript">
 		</script>
@@ -24,21 +24,9 @@
 		</div>
 		<div class='list'>
 			<h3>Key Locations</h3>
-			<!--<ul data-bind="foreach: currentLocations">
-				<li data-bind="click: show_marker"><span data-bind="text: title"></span>
+			<ul data-bind="foreach: pins">
+				<li><span data-bind="text: name, click: $parent.show_info"></span>
 				</li>
-			</ul>-->
-			<ul style="list-style-type:none">
-				<li>Walt Disney Hall</li>
-				<li>Dodger Stadium</li>
-				<li>Metro Plaza Hotel</li>
-				<li>The LA Hotel Downtown</li>
-				<li>Historic Mayfair Hotel</li>
-				<li>Philippe The Original</li>
-				<li>Noe Restaurant and Bar</li>
-				<li>La Parrilla</li>
-				<li>Yard House</li>
-				<li>Palm Restaurant</li>
 			</ul>
 		</div>
 		<div id="map-canvas"></div>
