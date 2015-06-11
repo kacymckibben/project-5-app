@@ -64,16 +64,18 @@ var Place = function(data){
 var ViewModel = function() {
 	var self = this;
 	this.placeList = ko.observableArray([]);
-
+	initialPlaces.forEach(function(placeItem){
+		self.placeList.push( new Place(placeItem) );
+	});
 	var infowindow = new google.maps.InfoWindow();
 	var map = new google.maps.Map(document.getElementById('map-canvas'), {
 			center: new google.maps.LatLng(34.0432121, -118.2499534),
 			zoom: 12,
 	});	
 	var marker;
-	for (var i = 0; i < initialPlaces.length; i++) {
+	for (var i = 0; i < this.placeList().length; i++) {
 		marker = new google.maps.Marker({
-			position: new google.maps.LatLng(initialPlaces[i].lat, initialPlaces[i].lon),
+			position: new google.maps.LatLng(this.placeList()[i].lat(), this.placeList()[i].lon()),
 			map: map,
 			animation: google.maps.Animation.DROP,
 		});
@@ -88,10 +90,9 @@ var ViewModel = function() {
 			checkinCount = results.stats.checkinsCount;
 			street = results.location.formattedAddress[0];
 			cityState = results.location.formattedAddress[1];
-
-			this.placeList = new Place(name, marker, url, rating, checkinCount, street, cityState);
-		console.log(this.placeList.street);
-	});
+			self.placeList()[i] = new Place(name, url, rating, checkinCount, street, cityState);
+			console.log(self.placeList()[i].street);
+		});
 
 		function toggleBounce() {
 			if(marker.getAnimation() != null) {
@@ -105,14 +106,14 @@ var ViewModel = function() {
 			toggleBounce();
 			setTimeout(toggleBounce, 2000);
 			setTimeout(function(){
-				infowindow.setContent('<p>test' + this.placeList[i].street + '</p>');
+				infowindow.setContent('<p>test' + self.placeList()[i].street + '</p>');
 				infowindow.open(map, marker);
 			}, 1000);
 		});
 	}
 
-	this.show_info = function(Place){
-		google.maps.event.trigger(Place.marker,'click');
+	this.show_info = function(){
+		google.maps.event.trigger(marker,'click');
 	}
 };
 $(document).ready(function(){
