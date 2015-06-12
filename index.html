@@ -19,13 +19,13 @@
 	<body>
 		<div class='header'>
 			<label>Search:</label>
-			<input type="text" placeholder='Filter places...'>
+			<input data-bind="value:filter, valueUpdate: 'afterkeydown'" type="text" placeholder='Filter places...'>
 			<!--data-bind="value:currentLocation().names, valueUpdate:'keyup'"-->
 		</div>
 		<div class='list'>
 			<h3>Key Locations</h3>
 			<ul data-bind="foreach: initialPlaces">
-				<li><span data-bind="text: name, click: show_info"></span>
+				<li><span data-bind="text: name, click: $parent.show_info"></span>
 				</li>
 			</ul>
 		</div>
