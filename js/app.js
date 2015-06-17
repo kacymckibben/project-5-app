@@ -57,7 +57,11 @@ var Place = function(data){
 	this.street = ko.observable();
 	this.cityState = ko.observable();
 	this.url = ko.observable();
-}
+};
+	var map = new google.maps.Map(document.getElementById('map-canvas'), {
+			center: new google.maps.LatLng(34.0432121, -118.2499534),
+			zoom: 12,
+	});	
 var ViewModel = function() {
 	var self = this;
 	this.placeList = ko.observableArray([]);
@@ -70,10 +74,10 @@ var ViewModel = function() {
 	/*Creates a new infowindow object*/
 	var infowindow = new google.maps.InfoWindow();
 	/*Creates the map*/
-	var map = new google.maps.Map(document.getElementById('map-canvas'), {
+	/*var map = new google.maps.Map(document.getElementById('map-canvas'), {
 			center: new google.maps.LatLng(34.0432121, -118.2499534),
 			zoom: 12,
-	});	
+	});*/	
 
 	/*For each placeItem, create a marker, look up FourSquare info, and add Listener to each marker*/
 	var marker;
@@ -88,7 +92,6 @@ var ViewModel = function() {
 
 		/*Look up FourSquare info*/
 		var foursquareUrl = 'https://api.foursquare.com/v2/venues/explore?limit=1&ll=' + placeItem.lat() + ',' + placeItem.lon() + '&intent=match&query=' + placeItem.name() + '&client_id=AOICOBBHGVYWPCIOEKTNF5CECB3RNMJWJWIQHEHJ1ZWDSAH1&client_secret=5HO3PIPDPY1DS50SLOUFNIAU1ZO2YBPPSWJQDCFGCBKE3HND&v=20140806';
-		var failText = 'Failed to get FOURSQUARE resources';
 		var name, url, rating, checkinCount, street, cityState;
 		$.getJSON(foursquareUrl, function(data){
 			results = data.response.groups[0].items[0].venue;
@@ -104,7 +107,7 @@ var ViewModel = function() {
 
 		/*Toggles the bounce animation on the marker*/
 		function toggleBounce() {
-			if(placeItem.marker.getAnimation() != null) {
+			if(placeItem.marker.getAnimation() !== null) {
 				placeItem.marker.setAnimation(null);
 			} else {
 				placeItem.marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -136,14 +139,14 @@ var ViewModel = function() {
 			return self.toUpperCase();
 		}), $(".locList > li").each(function() {
 			console.log(this);	
-			$(this).text().search(s) > -1 ? $(this).show() : $(this).hide()
+			$(this).text().search(s) > -1 ? $(this).show() : $(this).hide();
 		});
 		for(var i = 0; i < self.placeList().length; i++) {
 			console.log(self.map);
-			self.placeList()[i].marker.setMap(self.placeList()[i].marker.title.search(s) > -1 ? map : null)
-		};
-	}
-}
+			self.placeList()[i].marker.setMap(self.placeList()[i].marker.title.search(s) > -1 ? map : null);
+		}
+	};
+};
 
 $(document).ready(function(){
 	ko.applyBindings(new ViewModel());
