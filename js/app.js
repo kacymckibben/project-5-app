@@ -1,3 +1,4 @@
+"use strict";
 /*Model data*/
 var initialPlaces = [
 	{
@@ -46,6 +47,14 @@ var initialPlaces = [
 		lon: -118.28876
 	}
 ];
+
+/*function initialize() {
+	var map = new google.maps.Map(document.getElementById('map-canvas'), {
+		center: new google.maps.LatLng(34.0432121, -118.2499534),
+		zoom: 12,
+	});
+}*/
+
 /*Set observables*/
 var Place = function(data){
 	this.name = ko.observable(data.name);
@@ -58,12 +67,10 @@ var Place = function(data){
 	this.cityState = ko.observable();
 	this.url = ko.observable();
 };
-	var map = new google.maps.Map(document.getElementById('map-canvas'), {
-			center: new google.maps.LatLng(34.0432121, -118.2499534),
-			zoom: 12,
-	});	
+
 var ViewModel = function() {
 	var self = this;
+	/*var map;*/
 	this.placeList = ko.observableArray([]);
 
 	/*Creates new Place objects for each item in initialPlaces*/
@@ -77,11 +84,13 @@ var ViewModel = function() {
 	/*var map = new google.maps.Map(document.getElementById('map-canvas'), {
 			center: new google.maps.LatLng(34.0432121, -118.2499534),
 			zoom: 12,
-	});*/	
+	});*/
 
 	/*For each placeItem, create a marker, look up FourSquare info, and add Listener to each marker*/
 	var marker;
-	this.placeList().forEach(function(placeItem){
+	/*initialize();*/
+	self.placeList().forEach(function(placeItem){
+
 		marker = new google.maps.Marker({
 			position: new google.maps.LatLng(placeItem.lat(),placeItem.lon()),
 			map: map,
@@ -92,7 +101,7 @@ var ViewModel = function() {
 
 		/*Look up FourSquare info*/
 		var foursquareUrl = 'https://api.foursquare.com/v2/venues/explore?limit=1&ll=' + placeItem.lat() + ',' + placeItem.lon() + '&intent=match&query=' + placeItem.name() + '&client_id=AOICOBBHGVYWPCIOEKTNF5CECB3RNMJWJWIQHEHJ1ZWDSAH1&client_secret=5HO3PIPDPY1DS50SLOUFNIAU1ZO2YBPPSWJQDCFGCBKE3HND&v=20140806';
-		var name, url, rating, checkinCount, street, cityState;
+		var results, name, url, rating, checkinCount, street, cityState;
 		$.getJSON(foursquareUrl, function(data){
 			results = data.response.groups[0].items[0].venue;
 			placeItem.name = results.name;
@@ -122,6 +131,7 @@ var ViewModel = function() {
 				infowindow.setContent('<h3>' + placeItem.name + '</h3>\n<p><b>Rating: </b>' + placeItem.rating + '</p>\n<p><b>Check Ins: </b>' + placeItem.checkinCount + '</p>\n<a href=' + placeItem.url + '>' + placeItem.url + '</a>\n<p><b>Address:</b></p>\n<p>' + placeItem.street + '</p>\n<p>' + placeItem.cityState + '</p>');
 				infowindow.open(map, placeItem.marker);
 			}, 200);
+			map.panTo(placeItem.marker.position);
 		});
 
 	});
@@ -146,8 +156,23 @@ var ViewModel = function() {
 			self.placeList()[i].marker.setMap(self.placeList()[i].marker.title.search(s) > -1 ? map : null);
 		}
 	};
+	/*google.maps.event.addDomListener(window,'load',initialize);*/
 };
-
-$(document).ready(function(){
+var map;
+function initialize() {
+	map = new google.maps.Map(document.getElementById('map-canvas'), {
+		center: new google.maps.LatLng(34.0432121, -118.2499534),
+		zoom: 12,
+	});
+	google.maps.event.addDomListener(window,'resize', function(){
+		map.setCenter(new google.maps.LatLng(34.0432121, -118.2499534));
+		map.panTo(new google.maps.LatLng(34.0432121, -118.2499534));
+	});
 	ko.applyBindings(new ViewModel());
-});
+}
+
+google.maps.event.addDomListener(window,'load',initialize);
+/*ko.applyBindings(new ViewModel());*/
+/*$(document).ready(function(){
+	ko.applyBindings(new ViewModel());
+});*/
