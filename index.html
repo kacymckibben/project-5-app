@@ -5,12 +5,37 @@
 		<title>Kacy's Project 5</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<link href='css/offline-theme-chrome.css' rel='stylesheet'>
+		<link href='css/offline-theme-chrome-indicator.css' rel='stylesheet'>
+		<link href='css/offline-language-english.css' rel='stylesheet'>
 		<link href='css/offline-language-english-indicator.css' rel='stylesheet'>
 		<link href='css/bootstrap.min.css' rel='stylesheet'>
 		<link href='css/style.css' rel='stylesheet'>
+		<script src="js/offline.min.js"></script>
+		<script>
+		Offline.options = {
+			checkOnLoad: true,
+			checks: {
+            	image: {
+                	url: function() {
+                    	return 'http://kacymckibben.github.io/project-5-app/favicon.ico?_='
+                        + (Math.floor(Math.random() * 1000000000));
+                }
+            },
+            active: 'image'
+        	},
+			interceptRequests: true,
+			requests: true
+		}
+		</script>
+		<!--<script>
+			var run = function(){
+				if (Offline.state === 'up')
+					Offline.check();
+			}
+			setInterval(run, 2000);
+		</script>-->
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDu4jIGqO52nAL52Hlf-MNu5fgX9NZn0T4" type="text/javascript">
 		</script>
-		<script src="js/offline.min.js"></script>
 		<script src="js/knockout-3.3.0.js"></script>
 		<script src="js/jquery-1.11.3.min.js"></script>
 		<script src="js/app.js"></script>
