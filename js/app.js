@@ -48,13 +48,6 @@ var initialPlaces = [
 	}
 ];
 
-/*function initialize() {
-	var map = new google.maps.Map(document.getElementById('map-canvas'), {
-		center: new google.maps.LatLng(34.0432121, -118.2499534),
-		zoom: 12,
-	});
-}*/
-
 /*Set observables*/
 var Place = function(data){
 	this.name = ko.observable(data.name);
@@ -80,15 +73,10 @@ var ViewModel = function() {
 
 	/*Creates a new infowindow object*/
 	var infowindow = new google.maps.InfoWindow();
-	/*Creates the map*/
-	/*var map = new google.maps.Map(document.getElementById('map-canvas'), {
-			center: new google.maps.LatLng(34.0432121, -118.2499534),
-			zoom: 12,
-	});*/
 
 	/*For each placeItem, create a marker, look up FourSquare info, and add Listener to each marker*/
 	var marker;
-	/*initialize();*/
+
 	self.placeList().forEach(function(placeItem){
 
 		marker = new google.maps.Marker({
@@ -156,7 +144,6 @@ var ViewModel = function() {
 			self.placeList()[i].marker.setMap(self.placeList()[i].marker.title.search(s) > -1 ? map : null);
 		}
 	};
-	/*google.maps.event.addDomListener(window,'load',initialize);*/
 };
 var map;
 function initialize() {
@@ -172,7 +159,3 @@ function initialize() {
 }
 
 google.maps.event.addDomListener(window,'load',initialize);
-/*ko.applyBindings(new ViewModel());*/
-/*$(document).ready(function(){
-	ko.applyBindings(new ViewModel());
-});*/
